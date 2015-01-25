@@ -18,10 +18,15 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
         
-        let task1 = TaskModel(task: "Study French", subTask: "Verbs", date: "01/14/2015")
-        let task2 = TaskModel(task: "Eat Dinner", subTask: "Burger", date: "01/14/2015")
         
-        taskArray = [task1, task2, TaskModel(task: "Gym", subTask: "Legday", date: "01/14/2015")]
+        let date1 = Date.from(year: 2014, month: 01, day: 20)
+        let date2 = Date.from(year: 2015, month: 02, day: 21)
+        let date3 = Date.from(year: 2015, month: 01, day: 30)
+        
+        let task1 = TaskModel(task: "Study French", subTask: "Verbs", date: date1)
+        let task2 = TaskModel(task: "Eat Dinner", subTask: "Burger", date: date2)
+        
+        taskArray = [task1, task2, TaskModel(task: "Gym", subTask: "Legday", date: date3)]
         
         
             
@@ -35,6 +40,19 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
         // Dispose of any resources that can be recreated.
     }
 
+    
+    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+        
+        if segue.identifier == "showTaskDetail" {
+            let detailVC: TaskDetailViewController = segue.destinationViewController as TaskDetailViewController
+            let indexPath = self.tableView.indexPathForSelectedRow()
+            detailVC.detailTaskModel = taskArray[indexPath!.row]
+        }
+        
+        
+    }
+    
+    
     //UITableViewDataSource
     
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -49,14 +67,19 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
         
         cell.taskLabel.text = thisTask.task
         cell.subtaskLabel.text = thisTask.subTask
-        cell.dateLabel.text = thisTask.date
+        cell.dateLabel.text = Date.toString(date: thisTask.date)
         
         return cell
     }
     
     //UITableViewDelegate
     
-    func tableView(tableView: UITableView, didDeselectRowAtIndexPath indexPath: NSIndexPath) {
+    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+        
+        println(indexPath.row)
+        
+        performSegueWithIdentifier("showTaskDetail", sender: self)
+        
         
     }
     
