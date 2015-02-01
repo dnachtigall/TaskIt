@@ -1,30 +1,27 @@
 //
-//  TaskDetailViewController.swift
+//  AddTaskViewController.swift
 //  TaskIt
 //
-//  Created by David Nachtigall on 25.01.15.
+//  Created by David Nachtigall on 31.01.15.
 //  Copyright (c) 2015 David Nachtigall. All rights reserved.
 //
 
 import UIKit
 
-class TaskDetailViewController: UIViewController {
+class AddTaskViewController: UIViewController {
 
+    var mainVC: ViewController!
+    
     @IBOutlet weak var taskTextField: UITextField!
     @IBOutlet weak var subTaskTextField: UITextField!
     @IBOutlet weak var dueDatePicker: UIDatePicker!
     
-    var detailTaskModel: TaskModel!
-    var mainVC: ViewController!
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
 
         // Do any additional setup after loading the view.
-        taskTextField.text = detailTaskModel.task
-        subTaskTextField.text = detailTaskModel.subTask
-        dueDatePicker.date = detailTaskModel.date
-        
     }
 
     override func didReceiveMemoryWarning() {
@@ -42,17 +39,14 @@ class TaskDetailViewController: UIViewController {
         // Pass the selected object to the new view controller.
     }
     */
-    @IBAction func cancelButtonPressed(sender: UIBarButtonItem) {
-        self.navigationController?.popViewControllerAnimated(true)
+    @IBAction func cancelButtonPressed(sender: UIButton) {
+        self.dismissViewControllerAnimated(true, completion: nil)
     }
 
-    @IBAction func doneButtonItemPressed(sender: UIBarButtonItem) {
-        
+    
+    @IBAction func addTaskButtonPressed(sender: UIButton) {
         var task = TaskModel(task: taskTextField.text, subTask: subTaskTextField.text, date: dueDatePicker.date, completed: false)
-        
-        mainVC.baseArray[0][mainVC.tableView.indexPathForSelectedRow()!.row] = task
-        
-        self.navigationController?.popViewControllerAnimated(true)
-        
+        mainVC.baseArray[0].append(task)
+        self.dismissViewControllerAnimated(true, completion: nil)
     }
 }
