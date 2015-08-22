@@ -10,7 +10,7 @@ import UIKit
 import CoreData
 
 
-class ViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, NSFetchedResultsControllerDelegate {
+class ViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, NSFetchedResultsControllerDelegate, TaskDetailViewControllerDelegate, AddTaskViewControllerDelegate {
 
     @IBOutlet weak var tableView: UITableView!
     
@@ -22,6 +22,9 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
+        
+        self.view.backgroundColor = UIColor(patternImage: UIImage(named: "Background")!)
+        
         fetchedResultsController = getFetchedResultsController()
         fetchedResultsController.delegate = self
         fetchedResultsController.performFetch(nil)
@@ -47,9 +50,11 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
             let detailVC: TaskDetailViewController = segue.destinationViewController as! TaskDetailViewController
             let indexPath = self.tableView.indexPathForSelectedRow()
             detailVC.detailTaskModel = (fetchedResultsController.objectAtIndexPath(indexPath!) as! TaskModel)
+            detailVC.delegate = self
         }
         else if segue.identifier == "showTaskAdd" {
             let addTaskVC:AddTaskViewController = segue.destinationViewController as! AddTaskViewController
+            addTaskVC.delegate = self
         }
         
     }
@@ -131,6 +136,11 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
      
     }
     
+    
+    func tableView(tableView: UITableView, willDisplayCell cell: UITableViewCell, forRowAtIndexPath indexPath: NSIndexPath) {
+        cell.backgroundColor = UIColor.clearColor()
+    }
+    
     //NSFetchedResultsControllerDelegate
     
     func controllerDidChangeContent(controller: NSFetchedResultsController) {
@@ -153,7 +163,30 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
         return fetchedResultsController
     }
     
+    // TaskDetailViewControllerEdited
     
+    func taskDetailEdited() {
+    showAlert()
+    }
+    
+    
+    //AddTaskViewControllerDelegate
+    
+    func addTask(message: String) {
+        showAlert(message: message)
+    }
+    
+    func addTaskCanceled(message: String) {
+        showAlert(message: message)
+    }
+    
+    
+    func showAlert (message: String = "Congratulations") {
+        var alert = UIAlertController(title: "Change Made", message: message, preferredStyle: UIAlertControllerStyle.Alert)
+        
+        alert.addAction(UIAlertAction(title: "Ok", style: UIAlertActionStyle.Default, handler: nil))
+        self.presentViewController(alert, animated: true, completion: nil)
+    }
     
 }
 

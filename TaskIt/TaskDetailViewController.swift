@@ -8,17 +8,27 @@
 
 import UIKit
 
+@objc protocol TaskDetailViewControllerDelegate {
+    
+    optional func taskDetailEdited()
+    
+}
+
+
+
 class TaskDetailViewController: UIViewController {
 
     @IBOutlet weak var taskTextField: UITextField!
     @IBOutlet weak var subTaskTextField: UITextField!
     @IBOutlet weak var dueDatePicker: UIDatePicker!
     
+    var delegate:TaskDetailViewControllerDelegate?
+    
     var detailTaskModel: TaskModel!
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        self.view.backgroundColor = UIColor(patternImage: UIImage(named: "Background")!)
         // Do any additional setup after loading the view.
         taskTextField.text = detailTaskModel.task
         subTaskTextField.text = detailTaskModel.subtask
@@ -57,6 +67,8 @@ class TaskDetailViewController: UIViewController {
         appDelegate.saveContext()
         
         self.navigationController?.popViewControllerAnimated(true)
+        
+        delegate?.taskDetailEdited!()
         
     }
 }
